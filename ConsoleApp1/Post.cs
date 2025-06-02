@@ -13,7 +13,7 @@ namespace ConsoleApp1
         public DateTime CreationDateTime { get; set; }
         public uint LikeCount { get; set; }
         public uint ViewCount { get; set; }
-
+        public HashSet<string> LikedUsers { get; set; } = new HashSet<string>();
         public Post(string id, string content, DateTime creationDateTime, uint likeCount, uint viewCount)
         {
             Id = id;

@@ -93,15 +93,64 @@ namespace ConsoleApp1
 
                 if (!exitSelected && selectedIndex == 0)
                 {
-                    Console.Clear();
-                    for (int i = 0; i < posts.Count; i++)
+                    
+                    int selectedIndex2 = 0;
+                    ConsoleKey key2;
+                    HashSet<int> viewedPosts = new HashSet<int>();
+
+                    do
                     {
-                        Console.WriteLine($"Content: {posts[i].Content}");
-                        Console.WriteLine($"Creation time: {posts[i].CreationDateTime}");
-                        posts[i].ViewCount++;
-                        Console.WriteLine("-----------------------------");
+                        Console.Clear();
+                        Console.WriteLine("Posts (Exit - Ecs)\n");
+
+                        for (int i = 0; i < posts.Count; i++)
+                        {
+                            if (i == selectedIndex2 && !viewedPosts.Contains(i))
+                            {
+                                posts[i].ViewCount++;
+                                viewedPosts.Add(i);
+                                Admin.SendEmail("aliyevomer386@gmail.com", "uoir wrgz xdxw pnry", "aliyevomer386@gmail.com", "Notification",$"{Name} view your post!");
+
+                            }
+
+                            if (i == selectedIndex2)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine($"Post {i + 1} => Like: {posts[i].LikeCount}\nContent:  {posts[i].Content}\nView: {posts[i].ViewCount}");
+                                Console.ResetColor();
+                            }
+                            else
+                            {
+                                Console.WriteLine("   " + $"Post {i + 1} => Like: {posts[i].LikeCount}\nContent:  {posts[i].Content}\nView: {posts[i].ViewCount}");
+                            }
+
+                            Console.WriteLine();
+                        }
+
+                        key2 = Console.ReadKey(true).Key;
+
+                        if (key2 == ConsoleKey.UpArrow)
+                            selectedIndex2 = (selectedIndex2 == 0) ? posts.Count - 1 : selectedIndex2 - 1;
+                        else if (key2 == ConsoleKey.DownArrow)
+                            selectedIndex2 = (selectedIndex2 == posts.Count - 1) ? 0 : selectedIndex2 + 1;
+                        else if (key2 == ConsoleKey.Enter)
+                        {
+                            // yalnız bir dəfə like edilməsinə icazə verək
+                            if (!posts[selectedIndex2].LikedUsers.Contains(Id))
+                            {
+                                posts[selectedIndex2].LikeCount++;
+                                posts[selectedIndex2].LikedUsers.Add(Id);
+                                Admin.SendEmail("aliyevomer386@gmail.com", "uoir wrgz xdxw pnry", "aliyevomer386@gmail.com", "Notification",$"{Name} liked your post!");
+                            }
+                        }
+
+                    } while (key2 != ConsoleKey.Escape);
+                    Console.Clear();
+                    Console.WriteLine("Son vəziyyət:\n");
+                    foreach (var post in posts)
+                    {
+                        Console.WriteLine(post);
                     }
-                    Console.ReadLine();
                 }
                 else if (!exitSelected && selectedIndex == 1)
                 {
@@ -118,6 +167,7 @@ namespace ConsoleApp1
                 }
                 else if (exitSelected)
                 {
+                    
                     break;
                 }
             }
